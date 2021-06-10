@@ -70,5 +70,9 @@ workflows:
       - docker-build-publish:
           context:
             - test
+          filters:
+            branches:
+              only:
+              - dev
           requires:
             - zap-test
