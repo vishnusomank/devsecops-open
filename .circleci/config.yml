@@ -2,7 +2,7 @@ version: 2.1
 executors:
   env-publisher:
     environment:
-      IMAGE_NAME: lab-devsecops
+      IMAGE_NAME: vishnusk/lab-devsecops
 jobs:
   zap-test:
     executor: env-publisher
@@ -14,7 +14,7 @@ jobs:
           command: |
             docker network create zapnet
             IMAGE_TAG=$CIRCLE_BRANCH
-            docker build -t $DOCKER_UNAME/$IMAGE_NAME .
+            docker build -t $IMAGE_NAME .
       - run:
           name: zap-test
           shell: /bin/bash
@@ -40,7 +40,7 @@ jobs:
             fi
       - run:
           name: Archive Docker image
-          command: docker save -o image.tar $DOCKER_UNAME/$IMAGE_NAME
+          command: docker save -o image.tar $IMAGE_NAME
       - persist_to_workspace:
           root: .
           paths:
@@ -59,16 +59,14 @@ jobs:
           command: |
             IMAGE_TAG="v${CIRCLE_BUILD_NUM}"
             echo "$DOCKER_PWD" | docker login -u "$DOCKER_UNAME" --password-stdin 
-            docker tag $IMAGE_NAME:latest $DOCKER_UNAME/$IMAGE_NAME:$IMAGE_TAG
-            docker push $DOCKER_UNAME/$IMAGE_NAME:latest
-            docker push $DOCKER_UNAME/$IMAGE_NAME:$IMAGE_TAG
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+            docker push $IMAGE_NAME:latest
+            docker push $IMAGE_NAME:$IMAGE_TAG
 workflows:
   version: 2
   build-master:
     jobs:
       - zap-test:
-          context:
-            - test
       - docker-build-publish:
           context:
             - test
