@@ -66,11 +66,7 @@ workflows:
   version: 2
   build-master:
     jobs:
-      - zap-test:
-          filters:
-           branches:
-             only:
-             - dev
+      - zap-test
       - docker-build-publish:
           context:
             - test
