@@ -26,20 +26,20 @@ jobs:
             cat scan.txt
           no_output_timeout: 60m
       - run:
-          name: check-xss-dom
+          name: check-xss
+          shell: /bin/bash
           command: |  
-            #cat scan.txt
-            #val=$(cat scan.txt | grep "WARN-NEW: Cross Site Scripting")
-            cat scan.txt | grep "WARN-NEW: Cross Site Scripting"
-            status=$?
-            echo $status
-            #if [ -z "$val" ]
-            #then
-            #  echo "you cleared the vulnerability. Good Work!"
-            #else
-            #  echo "stopped"
-            #  exit 1
-            #fi
+            cat scan.txt
+            val=$(cat scan.txt | grep "WARN-NEW: Cross Site Scripting")
+            
+            echo $val
+            if [ -z "$val" ]
+            then
+              echo "you cleared the vulnerability. Good Work!"
+            else
+              echo "stopped"
+              exit 1
+            fi
       - run:
           name: Archive Docker image
           command: docker save -o image.tar $IMAGE_NAME
