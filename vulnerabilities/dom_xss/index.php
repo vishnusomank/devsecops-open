@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>XVWA - Xtreme Vulnerable Web Application </title>
+    <title>XVWA - Xtreme Vulnerable Web Application -- page test </title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
@@ -29,9 +29,12 @@
             function search()
             {
                 var myurl = document.URL;
+                // code snipet to purify url
+                import DOMPurify from 'dompurify';
+                myurl.innerHTML = DOMPurify.sanitize(document.URL, {RETURN_TRUSTED_TYPE: true});
                 if(myurl.indexOf("?search=")>0)
                 {
-                    document.getElementById('srch').innerHTML = "You've searched for "+unescape(myurl.substr(myurl.indexOf("?search=")+8));
+                    document.getElementById('srch').innerText = "You've searched for "+unescape(myurl.substr(myurl.indexOf("?search=")+8));
                 }
             }
        </script>
