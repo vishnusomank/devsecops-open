@@ -29,8 +29,10 @@ jobs:
           name: check-xss-dom
           command: |  
             #cat scan.txt
-            val=$(cat scan.txt | grep "WARN-NEW: Cross Site Scripting")
-            echo $val
+            #val=$(cat scan.txt | grep "WARN-NEW: Cross Site Scripting")
+            cat scan.txt | grep "WARN-NEW: Cross Site Scripting"
+            status=$?
+            echo $status
             #if [ -z "$val" ]
             #then
             #  echo "you cleared the vulnerability. Good Work!"
