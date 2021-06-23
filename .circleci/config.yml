@@ -2,7 +2,7 @@ version: 2.1
 executors:
   env-publisher:
     environment:
-      IMAGE_NAME: vishnusk/lab-devsecops
+      IMAGE_NAME: vishnusk/devsecops-lab
 jobs:
   zap-test:
     executor: env-publisher
@@ -64,21 +64,14 @@ jobs:
             docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:latest
             docker push $IMAGE_NAME:$IMAGE_TAG
+            curl -X POST "http://admin:11de256effe0dcfa0a0ba378d1834139a5@web-server-loadbalancer-1056389698.us-east-2.elb.amazonaws.com:8080/job/devsecops-lab/build"
 workflows:
   version: 2
   build-master:
     jobs:
-      - zap-test:
-          filters:
-            branches:
-              ignore:
-              - dev
+      - zap-test
       - docker-build-publish:
           context:
             - test
-          filters:
-            branches:
-              only:
-              - dev
           requires:
             - zap-test
