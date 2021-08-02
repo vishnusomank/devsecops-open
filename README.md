@@ -27,5 +27,5 @@ XVWA is designed to understand following security issues.
 + Unvalidated Redirect & Forwards
 + Server Side Template Injection
 
-Good Luck and Happy Hacking!!
+Good Luck and Happy Hacking!!!
 
