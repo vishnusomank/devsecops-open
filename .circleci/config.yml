@@ -71,7 +71,24 @@ jobs:
             if ls anchore-reports/*vuln*.json >/dev/null 2>&1; then
               exit 1
             fi
-          
+
+  clair_local_image_scan:
+    executor: env-publisher
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Clair Local Scan 
+          command: |
+            docker run -p 5432:5432 -d --name db arminc/clair-db:latest
+            docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest
+            cat /etc/os-release
+            uname -a
+
   docker-build-publish:
     executor: env-publisher
     machine: true
@@ -96,9 +113,11 @@ workflows:
     jobs:
       - zap-test
       - anchore_local_image_scan
+      - clair_local_image_scan
       - docker-build-publish:
           context:
             - test
           requires:
             - zap-test
             - anchore_local_image_scan
+            - clair_local_image_scan
