@@ -76,14 +76,11 @@ jobs:
     executor: env-publisher
     machine: true
     steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
+      - checkout
       - run:
           name: Clair Local Scan 
           command: |
+            docker build -t devsecops-lab/clair:latest .
             docker run -p 5432:5432 -d --name db arminc/clair-db:latest
             docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest
             cat /etc/os-release
