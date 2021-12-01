@@ -51,13 +51,11 @@ jobs:
             - ./image.tar
   local_image_scan:
     executor: anchore/anchore_engine
-    docker:
-      # replace with your preferred image
-      - image: cimg/base:stable
+    machine: true
     steps:
       - run:
           name: Load archived Docker image
-          command: sudo docker images 
+          command: docker images 
           
   docker-build-publish:
     executor: env-publisher
@@ -82,7 +80,9 @@ workflows:
   build-master:
     jobs:
       - zap-test
-      - local_image_scan
+      - local_image_scan:
+          requires:
+            - zap-test
       - docker-build-publish:
           context:
             - test
