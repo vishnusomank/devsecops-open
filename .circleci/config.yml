@@ -101,4 +101,4 @@ workflows:
             - test
           requires:
             - zap-test
-            - local_image_scan
+            - anchore_local_image_scan
