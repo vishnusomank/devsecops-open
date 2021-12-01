@@ -83,9 +83,17 @@ jobs:
             docker build -t devsecops-lab/clair:latest .
             docker run -p 5432:5432 -d --name db arminc/clair-db:latest
             docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest
-            cat /etc/os-release
-            uname -a
-
+            wget https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_386 -O clair-scanner
+            chmod +x clair-scanner
+            ./clair-scanner --ip=$()ip addr show docker0 | grep inet | awk 'NR==1{print $2}' | cut -d / -f 1) -r output.json devsecops-lab/clair:latest
+            if [ -z $(cat output.json | grep Low) ]; then 
+              echo "No Vulnerabilities Found" 
+            else 
+              exit 1  
+            fi
+      - run:
+          name: clair output
+          command: cat output.json 
   docker-build-publish:
     executor: env-publisher
     machine: true
