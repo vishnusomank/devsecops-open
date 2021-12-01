@@ -91,9 +91,7 @@ jobs:
             else 
               exit 1  
             fi
-      - run:
-          name: clair output
-          command: cat output.json 
+            
   docker-build-publish:
     executor: env-publisher
     machine: true
