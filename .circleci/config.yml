@@ -50,13 +50,21 @@ jobs:
           paths:
             - ./image.tar
   local_image_scan:
-    executor: anchore/anchore_engine
-    machine: 
-      image: ubuntu-2004:202010-01
+    executor: env-publisher
+    machine: true
+    docker:
+      - image: anchore/engine-cli:latest
     steps:
       - run:
-          name: Load archived Docker image
-          command: docker images 
+          name: Anchore Scan
+          command: |
+            echo "Adding image to Anchore Engine"
+            anchore-cli image add $IMAGE_NAME:latest
+            echo "Waiting for image analysis to complete"
+            counter=0
+            while (! (anchore-cli image get $IMAGE_NAME:latest | grep 'Status: analyzed') ) ; do echo -n "." ; sleep 10 ; if  ; then echo " Timeout waiting for analysis" ; exit 1 ; fi ; counter=$(($counter+1)) ; done
+            echo "Analysis complete"
+            if  ; then anchore-cli evaluate check $IMAGE_NAME:latest  ; fi
           
   docker-build-publish:
     executor: env-publisher
