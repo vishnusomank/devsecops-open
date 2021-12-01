@@ -57,7 +57,7 @@ jobs:
     steps:
       - run:
           name: Load archived Docker image
-          command: docker images 
+          command: sudo docker images 
           
   docker-build-publish:
     executor: env-publisher
