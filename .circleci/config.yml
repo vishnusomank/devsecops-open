@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  anchore: anchore/anchore-engine@1.0.0
+  anchore-engine: anchore/anchore-engine@1.9.0
 executors:
   env-publisher:
     environment:
@@ -50,7 +50,7 @@ jobs:
           paths:
             - ./image.tar
   local_image_scan:
-    executor: env-publisher
+    executor: anchore/anchore_engine
     machine: true
     steps:
       - attach_workspace:
@@ -58,12 +58,8 @@ jobs:
       - run:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Docker tag with latest
-          command: |
-            docker tag $IMAGE_NAME:latest
       - anchore/analyze_local_image:
-          image_name: $IMAGE_NAME:latest
+          image_name: vishnusk/devsecops-lab:latest
           timeout: '500'
           analysis_fail: True
           
