@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  anchore-engine: anchore/anchore-engine@1.9.0
+  anchore: anchore/anchore-engine@1.9.0
 executors:
   env-publisher:
     environment:
