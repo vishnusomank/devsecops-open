@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  anchore: anchore/anchore-engine@1.0.0
 executors:
   env-publisher:
     environment:
@@ -47,6 +49,24 @@ jobs:
           root: .
           paths:
             - ./image.tar
+  local_image_scan:
+    executor: env-publisher
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Docker tag with latest
+          command: |
+            docker tag $IMAGE_NAME:latest
+      - anchore/analyze_local_image:
+          image_name: $IMAGE_NAME:latest
+          timeout: '500'
+          analysis_fail: True
+          
   docker-build-publish:
     executor: env-publisher
     machine: true
@@ -75,3 +95,4 @@ workflows:
             - test
           requires:
             - zap-test
+            - local_image_scan
