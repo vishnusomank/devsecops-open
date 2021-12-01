@@ -20,7 +20,7 @@ jobs:
       - run:
           name: zap-test
           shell: /bin/bash
-          command: |      
+          command: |
             docker images
             echo $CIRCLE_BRANCH
             docker run --net zapnet --name labimg -d -p 80:80 $IMAGE_NAME
@@ -30,7 +30,7 @@ jobs:
       - run:
           name: check-xss
           shell: /bin/bash
-          command: |  
+          command: |
             cat scan.txt
             val=$(cat scan.txt | grep "WARN-NEW: Cross Site Scripting")
             
@@ -51,11 +51,13 @@ jobs:
             - ./image.tar
   local_image_scan:
     executor: anchore/anchore_engine
-    machine: true
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
     steps:
       - run:
           name: Load archived Docker image
-          command: docker images
+          command: docker images 
           
   docker-build-publish:
     executor: env-publisher
