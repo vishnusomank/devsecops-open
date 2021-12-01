@@ -86,6 +86,7 @@ workflows:
   build-master:
     jobs:
       - zap-test
+      - local_image_scan
       - docker-build-publish:
           context:
             - test
