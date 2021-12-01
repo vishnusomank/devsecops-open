@@ -50,6 +50,21 @@ jobs:
           paths:
             - ./image.tar
   local_image_scan:
+    executor: anchore/anchore_engine
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          command: 'docker build -t "devsecops-lab/anchore:latest" .'
+          name: build container
+      - anchore/analyze_local_image:
+          image_name: 'devsecops-lab/anchore:latest'
+          policy_failure: true
+          timeout: '500'
+      - anchore/parse_reports
+      - store_artifacts:
+          path: anchore-reports
+
     executor: env-publisher
     machine: true
     docker:
