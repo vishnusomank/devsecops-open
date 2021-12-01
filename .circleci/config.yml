@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  anchore: anchore/anchore-engine@1.9.0
+  anchore: anchore/anchore-engine@1
 executors:
   env-publisher:
     environment:
@@ -59,9 +59,12 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - anchore/analyze_local_image:
-          image_name: vishnusk/devsecops-lab:latest
+          image_name: 'vishnusk/devsecops-lab:latest'
           timeout: '500'
           analysis_fail: True
+      - anchore/parse_reports
+      - store_artifacts:
+          path: anchore-reports
           
   docker-build-publish:
     executor: env-publisher
