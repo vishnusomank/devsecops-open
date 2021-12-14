@@ -5,8 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
   apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
- ENV SUDO_FORCE_REMOVE=yes
-RUN apt-get remove -y sudo openssl
+RUN apt-get --only-upgrade install -y sudo openssl
 
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
