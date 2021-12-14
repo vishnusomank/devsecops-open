@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:trusty-20191217
 
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
