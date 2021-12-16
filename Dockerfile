@@ -1,4 +1,4 @@
-FROM vishnusk/trustyimage
+FROM ubuntu:trusty
 
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
